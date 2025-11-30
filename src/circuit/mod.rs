@@ -18,7 +18,7 @@ pub use join::*;
 pub use range_check::*;
 pub use sort::*;
 
-/// Basic SQL Gate trait - all operators implement this
+/// Temel SQL Gate trait'i - tüm operatörler bunu implement eder
 pub trait SQLGate<F: ff::PrimeField> {
     type Config;
 
@@ -31,13 +31,13 @@ pub trait SQLGate<F: ff::PrimeField> {
     ) -> Result<(), Error>;
 }
 
-/// Main circuit structure - SQL queries will be compiled here
-/// Paper Section 3: Compiling SQL queries to ZKP circuit
+/// Ana devre yapısı - SQL sorgularını buraya derleyeceğiz
+/// Makale Section 3: SQL sorgularını ZKP circuit'ine derleme
 #[derive(Clone)]
 pub struct PoneglyphCircuit {
-    /// Database commitment (public input)
+    /// Veritabanı commitment (public input)
     pub db_commitment: Value<Fr>,
-    /// Query result (public input)
+    /// Query sonucu (public input)
     pub query_result: Value<Fr>,
     /// Range check operations
     pub range_checks: Vec<RangeCheckOp>,
@@ -114,15 +114,15 @@ impl Circuit<Fr> for PoneglyphCircuit {
         config: Self::Config,
         mut layouter: impl Layouter<Fr>,
     ) -> Result<(), Error> {
-        // Paper Section 5.1: Expose public inputs to instance column
-        // Row 0: Database commitment
-        // Row 1: Query result
-        // NOTE: We don't read from instance column here
-        // because it will be filled with public_inputs in MockProver::run() call
-        // enable_equality is already done in configure, which is sufficient
-        // Instance column constraints are automatically checked by MockProver
+        // Makale Section 5.1: Public input'ları instance column'a expose et
+        // Row 0: Veritabanı commitment
+        // Row 1: Sorgu sonucu
+        // NOT: Instance column'dan değer okuma işlemini KALDIRIYORUZ
+        // Çünkü MockProver::run çağrısında public_inputs ile doldurulacak
+        // enable_equality zaten configure'da yapıldı, bu yeterli
+        // Instance column constraint'leri MockProver tarafından otomatik olarak kontrol edilir
 
-        // Load lookup table
+        // Lookup table'ı yükle
         config.load_lookup_table(&mut layouter)?;
 
         // Create gate configs for synthesis
@@ -159,7 +159,7 @@ impl Circuit<Fr> for PoneglyphCircuit {
             input_column: config.advice[2],
             output_column: config.advice[3],
             diff_column: config.advice[4],
-            sort_selector: config.sort_selector, // Separate selector for Sort
+            sort_selector: config.sort_selector, // Sort için ayrı selector
             range_check_config: range_check_config.clone(),
         };
         let sort_chip = SortChip::new(sort_config.clone());
