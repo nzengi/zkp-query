@@ -52,6 +52,8 @@ pub struct PoneglyphConfig {
     pub less_than_selector: Selector,
     pub decomposition_selector: Selector,
     pub diff_lookup_selector: Selector,
+    // Separate selector for Sort (to avoid conflicts with less_than_selector)
+    pub sort_selector: Selector,
 }
 
 impl PoneglyphConfig {
@@ -105,6 +107,7 @@ impl PoneglyphConfig {
         let less_than_selector = meta.selector();
         let decomposition_selector = meta.selector();
         let diff_lookup_selector = meta.complex_selector();
+        let sort_selector = meta.selector();
         
         // Enable fixed columns (for threshold and u values)
         meta.enable_constant(fixed[0]);
@@ -118,7 +121,8 @@ impl PoneglyphConfig {
             meta.enable_equality(*col);
         }
         
-        Self {
+        // Create temporary config for gate configuration
+        let temp_config = Self {
             advice,
             fixed,
             lookup_table,
@@ -127,7 +131,33 @@ impl PoneglyphConfig {
             less_than_selector,
             decomposition_selector,
             diff_lookup_selector,
-        }
+            sort_selector,
+        };
+        
+        // Configure all gates
+        let _range_check_config =
+            crate::circuit::range_check::RangeCheckChip::configure(meta, &temp_config);
+        let _sort_config =
+            crate::circuit::sort::SortChip::configure(meta, &temp_config, &_range_check_config);
+        let _group_by_config = crate::circuit::group_by::GroupByChip::configure(
+            meta,
+            &temp_config,
+            &_range_check_config,
+        );
+        let _join_config = crate::circuit::join::JoinChip::configure(
+            meta,
+            &temp_config,
+            &_range_check_config,
+            &_sort_config,
+        );
+        let _aggregation_config = crate::circuit::aggregation::AggregationChip::configure(
+            meta,
+            &temp_config,
+            &_group_by_config,
+            &_range_check_config,
+        );
+        
+        temp_config
     }
     
     /// Fill lookup table (values 0-255)

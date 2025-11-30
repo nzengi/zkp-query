@@ -82,8 +82,8 @@ impl SortChip {
         let output_column = config.advice[3];
         let diff_column = config.advice[4];
         
-        // Create selector
-        let sort_selector = meta.selector();
+        // Get selector from config (defined in PoneglyphConfig)
+        let sort_selector = config.sort_selector;
         
         // Add sorting constraint
         // Paper Section 4.2: B[i] ≤ B[i+1] check
