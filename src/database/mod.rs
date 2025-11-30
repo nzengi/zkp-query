@@ -34,7 +34,7 @@ impl DatabaseCommitment {
     /// Database commitment
     pub fn new(data: &[(u64, u64)]) -> Self {
         // Simple hash function - production should use more secure hash
-        // (e.g., Poseidon hash, Pedersen hash)
+        // (e.g.: Poseidon hash, Pedersen hash)
         let data_hash = Self::hash_data(data);
 
         // Create commitment

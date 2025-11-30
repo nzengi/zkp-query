@@ -48,7 +48,7 @@ impl Prover {
         Ok(Self { pk })
     }
 
-    /// Generate proof
+    /// Create proof
     /// Paper Section 5: Non-interactive proof generation
     ///
     /// Halo2 0.3.1 real API: create_proof(params, pk, circuits, instances, rng, transcript)

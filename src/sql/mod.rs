@@ -115,7 +115,7 @@ pub struct SQLParser;
 
 impl SQLParser {
     /// Parse SQL string
-    /// Simple parser - production can use more advanced parser (e.g., sqlparser-rs)
+    /// Simple parser - production can use more advanced parser (e.g.: sqlparser-rs)
     pub fn parse(sql: &str) -> Result<SQLQuery, String> {
         let sql = sql.trim().to_lowercase();
 
@@ -518,7 +518,7 @@ impl SQLCompiler {
                     })?;
 
                 for &val in column_data {
-                    // For range check: val > value, we can check val < MAX_VALUE - value
+                    // For range check: val > value, can check val < MAX_VALUE - value
                     // Simple implementation: val >= value + 1 check
                     let threshold = value + 1;
                     let u = if val >= threshold { val - threshold } else { 0 };
@@ -539,7 +539,7 @@ impl SQLCompiler {
 
                 for &val in column_data {
                     // Equality check: val == value
-                    // With range check: val < value + 1 && val >= value
+                    // Range check ile: val < value + 1 && val >= value
                     compiled.range_checks.push(RangeCheckOp {
                         value: Value::known(val),
                         threshold: value + 1,
