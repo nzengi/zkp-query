@@ -9,6 +9,10 @@ pub fn bytes_to_hex(bytes: &[u8]) -> String {
 
 /// Parse hex string to bytes
 pub fn hex_to_bytes(hex: &str) -> Result<Vec<u8>, String> {
+    if hex.len() % 2 != 0 {
+        return Err("Hex string must have even length".to_string());
+    }
+    
     (0..hex.len())
         .step_by(2)
         .map(|i| u8::from_str_radix(&hex[i..i + 2], 16)
@@ -42,6 +46,14 @@ mod tests {
         let hex = "1234abcd";
         let bytes = super::hex_to_bytes(hex).unwrap();
         assert_eq!(bytes, vec![0x12, 0x34, 0xab, 0xcd]);
+    }
+
+    #[test]
+    fn test_hex_to_bytes_odd_length() {
+        let hex = "123";
+        let result = super::hex_to_bytes(hex);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("even length"));
     }
 
     #[test]
