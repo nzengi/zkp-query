@@ -31,8 +31,12 @@ pub trait SQLGate<F: ff::PrimeField> {
     ) -> Result<(), Error>;
 }
 
-/// Ana devre yapısı - SQL sorgularını buraya derleyeceğiz
-/// Makale Section 3: SQL sorgularını ZKP circuit'ine derleme
+/// Main circuit structure - SQL queries are compiled into this circuit
+///
+/// This is the top-level circuit that combines all SQL operations (range checks,
+/// sorts, group-bys, joins, aggregations) into a single Halo2 circuit.
+///
+/// See paper Section 3: Compiling SQL queries into ZKP circuits
 #[derive(Clone)]
 pub struct PoneglyphCircuit {
     /// Veritabanı commitment (public input)
