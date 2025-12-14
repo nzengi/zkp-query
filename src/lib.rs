@@ -12,15 +12,3 @@ pub use prover::*;
 pub use recursive::*;
 pub use optimization::*;
 
-
-pub use recursive::*;
-pub use optimization::*;
-
-
-pub use recursive::*;
-pub use optimization::*;
-
-
-pub use recursive::*;
-pub use optimization::*;
-
