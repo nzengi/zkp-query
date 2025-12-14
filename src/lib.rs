@@ -9,6 +9,9 @@ pub mod utils;
 pub mod error;
 pub mod validation;
 
+#[cfg(test)]
+pub mod test_utils;
+
 pub use circuit::*;
 pub use database::*;
 pub use sql::*;
