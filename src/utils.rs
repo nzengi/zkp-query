@@ -64,17 +64,3 @@ mod tests {
         assert_eq!(hash1, hash2);
     }
 }
-
-// PR improvement 1
-// PR improvement 2
-// PR improvement 3
-// PR improvement 4
-// PR improvement 5
-// PR improvement 6
-// PR improvement 7
-// PR improvement 8
-// PR improvement 9
-// PR improvement 10
-// PR improvement 11
-// PR improvement 12
-// PR improvement 13
