@@ -12,6 +12,9 @@ pub mod validation;
 #[cfg(test)]
 pub mod test_utils;
 
+#[macro_use]
+pub mod macros;
+
 pub use circuit::*;
 pub use database::*;
 pub use sql::*;
