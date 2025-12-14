@@ -43,7 +43,7 @@ The circuit is built using Halo2's PLONKish arithmetization and implements the f
 - `pasta_curves = "0.5"` - Pasta curve implementation
 - `ff = "0.13"` - Finite field traits
 - `group = "0.13"` - Group traits
-- `rand = "0.8"` - Random number generation
+- `rand = "0.9"` - Random number generation
 - `serde = "1.0"` - Serialization support
 
 ## Building
