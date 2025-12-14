@@ -30,6 +30,24 @@ pub fn simple_hash(data: &[u8]) -> u64 {
     hasher.finish()
 }
 
+/// Pad bytes to a specific length
+pub fn pad_bytes(bytes: &[u8], length: usize, pad_value: u8) -> Vec<u8> {
+    let mut result = bytes.to_vec();
+    while result.len() < length {
+        result.push(pad_value);
+    }
+    result
+}
+
+/// Truncate or pad bytes to exact length
+pub fn truncate_or_pad(bytes: &[u8], length: usize, pad_value: u8) -> Vec<u8> {
+    let mut result = bytes.iter().take(length).copied().collect::<Vec<_>>();
+    while result.len() < length {
+        result.push(pad_value);
+    }
+    result
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -62,5 +80,20 @@ mod tests {
         let hash1 = super::simple_hash(data);
         let hash2 = super::simple_hash(data);
         assert_eq!(hash1, hash2);
+    }
+
+    #[test]
+    fn test_pad_bytes() {
+        let bytes = b"test";
+        let padded = super::pad_bytes(bytes, 8, 0);
+        assert_eq!(padded.len(), 8);
+        assert_eq!(&padded[0..4], bytes);
+    }
+
+    #[test]
+    fn test_truncate_or_pad() {
+        let bytes = b"test data long";
+        let result = super::truncate_or_pad(bytes, 8, 0);
+        assert_eq!(result.len(), 8);
     }
 }
