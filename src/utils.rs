@@ -74,3 +74,4 @@ mod tests {
 // PR improvement 7
 // PR improvement 8
 // PR improvement 9
+// PR improvement 10
