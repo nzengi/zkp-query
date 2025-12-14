@@ -174,7 +174,7 @@ impl AggregationChip {
         mut layouter: impl Layouter<Fr>,
         group_keys: &[u64],
         values: &[u64],
-        agg_type: &str,
+        agg_type: &super::AggregationType,
     ) -> Result<Vec<AssignedCell<Fr, Fr>>, Error> {
         if group_keys.len() != values.len() {
             return Err(Error::Synthesis);
@@ -198,11 +198,10 @@ impl AggregationChip {
         // First, calculate all result values (for MAX/MIN comparison constraints)
         let mut result_values = Vec::new();
         let first_result = match agg_type {
-            "sum" => values[0],
-            "count" => 1,
-            "max" => values[0],
-            "min" => values[0],
-            _ => return Err(Error::Synthesis),
+            super::AggregationType::Sum => values[0],
+            super::AggregationType::Count => 1,
+            super::AggregationType::Max => values[0],
+            super::AggregationType::Min => values[0],
         };
         result_values.push(first_result);
         let mut current_result = first_result;
@@ -216,19 +215,17 @@ impl AggregationChip {
             
             let boundary_value = if boundary == Fr::ONE {
                 match agg_type {
-                    "sum" => values[i],
-                    "count" => 1,
-                    "max" => values[i],
-                    "min" => values[i],
-                    _ => return Err(Error::Synthesis),
+                    super::AggregationType::Sum => values[i],
+                    super::AggregationType::Count => 1,
+                    super::AggregationType::Max => values[i],
+                    super::AggregationType::Min => values[i],
                 }
             } else {
                 match agg_type {
-                    "sum" => current_result + values[i],
-                    "count" => current_result + 1,
-                    "max" => current_result.max(values[i]),
-                    "min" => current_result.min(values[i]),
-                    _ => return Err(Error::Synthesis),
+                    super::AggregationType::Sum => current_result + values[i],
+                    super::AggregationType::Count => current_result + 1,
+                    super::AggregationType::Max => current_result.max(values[i]),
+                    super::AggregationType::Min => current_result.min(values[i]),
                 }
             };
             result_values.push(boundary_value);
@@ -237,7 +234,7 @@ impl AggregationChip {
         
         // Now assign result_cells and add comparison constraints
         let result_cells = layouter.assign_region(
-            || format!("aggregate {}", agg_type),
+            || format!("aggregate {:?}", agg_type),
             |mut region| {
                 let mut result_cells = Vec::new();
                 
@@ -295,11 +292,10 @@ impl AggregationChip {
                     result_cells.push(result_cell);
                     
                     match agg_type {
-                        "sum" => self.config.sum_selector.enable(&mut region, i)?,
-                        "count" => self.config.count_selector.enable(&mut region, i)?,
-                        "max" => self.config.max_selector.enable(&mut region, i)?,
-                        "min" => self.config.min_selector.enable(&mut region, i)?,
-                        _ => return Err(Error::Synthesis),
+                        super::AggregationType::Sum => self.config.sum_selector.enable(&mut region, i)?,
+                        super::AggregationType::Count => self.config.count_selector.enable(&mut region, i)?,
+                        super::AggregationType::Max => self.config.max_selector.enable(&mut region, i)?,
+                        super::AggregationType::Min => self.config.min_selector.enable(&mut region, i)?,
                     }
                 }
                 
@@ -311,7 +307,7 @@ impl AggregationChip {
         // For MAX: result >= value and result >= prev_result checks
         // For MIN: result <= value and result <= prev_result checks
         // Using Range Check to verify result >= value (MAX) or result <= value (MIN)
-        if agg_type == "max" || agg_type == "min" {
+        if matches!(agg_type, super::AggregationType::Max | super::AggregationType::Min) {
             use super::range_check::RangeCheckChip;
             let range_check_chip = RangeCheckChip::new(self.config.range_check_config.clone());
             
@@ -341,7 +337,7 @@ impl AggregationChip {
                     Fr::ZERO
                 };
                 
-                if agg_type == "max" {
+                if matches!(agg_type, super::AggregationType::Max) {
                     // For MAX: result >= value check
                     let diff = result_values[i].saturating_sub(values[i]);
                     let _diff_chunks = range_check_chip.decompose_64bit(
@@ -357,7 +353,7 @@ impl AggregationChip {
                             Value::known(prev_diff),
                         )?;
                     }
-                } else if agg_type == "min" {
+                } else if matches!(agg_type, super::AggregationType::Min) {
                     // For MIN: result <= value check
                     let diff = values[i].saturating_sub(result_values[i]);
                     let _diff_chunks = range_check_chip.decompose_64bit(

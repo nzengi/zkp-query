@@ -81,12 +81,44 @@ pub struct JoinOp {
     pub table2_values: Vec<u64>,
 }
 
+/// Aggregation type
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub enum AggregationType {
+    Sum,
+    Count,
+    Max,
+    Min,
+}
+
+impl AggregationType {
+    /// Create from string representation
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s.to_lowercase().as_str() {
+            "sum" => Some(AggregationType::Sum),
+            "count" => Some(AggregationType::Count),
+            "max" => Some(AggregationType::Max),
+            "min" => Some(AggregationType::Min),
+            _ => None,
+        }
+    }
+
+    /// Convert to string representation
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            AggregationType::Sum => "sum",
+            AggregationType::Count => "count",
+            AggregationType::Max => "max",
+            AggregationType::Min => "min",
+        }
+    }
+}
+
 /// Aggregation Operation
 #[derive(Clone, Debug)]
 pub struct AggregationOp {
     pub group_keys: Vec<u64>,
     pub values: Vec<u64>,
-    pub agg_type: String, // "sum", "count", "max", "min"
+    pub agg_type: AggregationType,
 }
 
 impl Circuit<Fr> for PoneglyphCircuit {
