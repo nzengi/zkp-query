@@ -86,7 +86,7 @@ pub struct JoinOp {
 }
 
 /// Aggregation type
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 pub enum AggregationType {
     Sum,
     Count,
