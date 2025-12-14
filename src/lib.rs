@@ -5,6 +5,7 @@ pub mod prover;
 pub mod recursive;
 pub mod optimization;
 pub mod utils;
+pub mod error;
 
 pub use circuit::*;
 pub use database::*;
@@ -13,4 +14,5 @@ pub use prover::*;
 pub use recursive::*;
 pub use optimization::*;
 pub use utils::*;
+pub use error::*;
 
