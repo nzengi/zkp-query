@@ -1,3 +1,7 @@
+//! PoneglyphDB Library
+//! 
+//! A Zero-Knowledge Proof query engine.
+
 pub mod constants;
 pub mod circuit;
 pub mod database;
