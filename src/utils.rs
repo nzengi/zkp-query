@@ -112,3 +112,12 @@ mod tests {
         assert!(!super::is_valid_hex("zz"));
     }
 }
+
+/// Mock SHA256 helper
+pub fn mock_sha256(data: &[u8]) -> [u8; 32] {
+    let mut out = [0u8; 32];
+    for (i, &b) in data.iter().take(32).enumerate() {
+        out[i] = b;
+    }
+    out
+}
