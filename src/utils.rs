@@ -48,6 +48,14 @@ pub fn truncate_or_pad(bytes: &[u8], length: usize, pad_value: u8) -> Vec<u8> {
     result
 }
 
+/// Check if a string is a valid hex string
+pub fn is_valid_hex(hex: &str) -> bool {
+    if hex.len() % 2 != 0 {
+        return false;
+    }
+    hex.chars().all(|c| c.is_digit(16))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -95,5 +103,12 @@ mod tests {
         let bytes = b"test data long";
         let result = super::truncate_or_pad(bytes, 8, 0);
         assert_eq!(result.len(), 8);
+    }
+
+    #[test]
+    fn test_is_valid_hex() {
+        assert!(super::is_valid_hex("1234abcd"));
+        assert!(!super::is_valid_hex("123"));
+        assert!(!super::is_valid_hex("zz"));
     }
 }
