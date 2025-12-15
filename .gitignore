@@ -45,3 +45,5 @@ desktop.ini
 # Analysis files
 *.profdata
 
+
+*.profraw
