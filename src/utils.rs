@@ -121,3 +121,10 @@ pub fn mock_sha256(data: &[u8]) -> [u8; 32] {
     }
     out
 }
+
+#[test]
+fn test_mock_sha256() {
+    let data = b"hello";
+    let hash = super::mock_sha256(data);
+    assert_eq!(hash[0], b'h');
+}
