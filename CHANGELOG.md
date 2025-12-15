@@ -1,3 +1,8 @@
+## Unreleased
+
+- Added various documentation and configuration files.
+- Added utils helpers.
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
