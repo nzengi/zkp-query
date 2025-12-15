@@ -1,3 +1,5 @@
+[![Rust](https://github.com/nzengi/zkp-query/actions/workflows/rust.yml/badge.svg)](https://github.com/nzengi/zkp-query/actions/workflows/rust.yml)
+
 # PoneglyphDB
 
 A zero-knowledge database proof system implementing SQL query verification using Halo2 proofs. This project provides cryptographic proofs for database queries including JOIN, GROUP BY, and aggregation operations.
